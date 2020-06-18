@@ -1,0 +1,16 @@
+{
+  "name": "project12",
+  "version": "0.0.1",
+  "description": "project12 yandex-praktikum",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Smolyaninov A.",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
