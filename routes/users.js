@@ -1,9 +1,17 @@
 const router = require('express').Router();
 const path = require('path');
-const  users  = require(path.resolve('./data/', 'users.json'));
+const fs = require('fs');
+
 
 router.get('/', (req, res) => {
-  res.status(200).send(users);
+  const data = fs.readFile(path.resolve('./data/', 'users.json'), {enccoding: 'utf-8'}, (err, data)=>{
+    if (err) {
+      console.log(err);
+      return;
+  }
+  res.status(200).send(JSON.parse(data));
+  })
+
 });
 
 router.get('/:id', (req, res) => {
