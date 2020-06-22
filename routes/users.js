@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const  users  = require('../data/users.json');
+const path = require('path');
+const  users  = require(path.resolve('./data/', 'users.json'));
 
 router.get('/', (req, res) => {
   res.status(200).send(users);
