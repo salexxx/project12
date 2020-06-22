@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 router.get('/', (req, res) => {
-  const data = fs.readFile(path.resolve('./data/', 'cards.json'), {encoding: 'utf-8'}, (err, data)=>{
+  fs.readFile(path.resolve('./data/', 'cards.json'), {encoding: 'utf-8'}, (err, data)=>{
     if (err) {
       console.log(err);
       return;

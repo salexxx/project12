@@ -2,9 +2,8 @@ const router = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 
-
 router.get('/', (req, res) => {
-  const data = fs.readFile(path.resolve('./data/', 'users.json'), {enccoding: 'utf-8'}, (err, data)=>{
+  fs.readFile(path.resolve('./data/', 'users.json'), {enccoding: 'utf-8'}, (err, data)=>{
     if (err) {
       console.log(err);
       return;
@@ -17,17 +16,25 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const id = req.params.id;
   let user = null;
-  if (Array.isArray(users)){
-  user = users.find((elem)=>{
-   return  elem._id === id;
-    })
-  };
-
-  if (user) {
-    res.status(200).send(user)
-  } else {
-    res.status(404).send({ "message": "Нет пользователя с таким id" })
+  fs.readFile(path.resolve('./data/', 'users.json'), {enccoding: 'utf-8'}, (err, data)=>{
+    if (err) {
+      console.log(err);
+      return;
   }
+  if (Array.isArray(JSON.parse(data))){
+    const arr = JSON.parse(data);
+    user = arr.find((elem)=>{
+     return  elem._id === id;
+      });
+      if (user) {
+        res.status(200).send(user)
+      } else {
+        res.status(404).send({ "message": "Нет пользователя с таким id" })
+      }
+    }
+
+  })
+
 });
 
 
