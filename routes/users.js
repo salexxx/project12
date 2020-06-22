@@ -8,13 +8,13 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  var user = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i]._id == id) {
-      user = users[i]
-      break
-    }
-  }
+  let user = null;
+  if (Array.isArray(users)){
+  user = users.find((elem)=>{
+   return  elem._id === id;
+    })
+  };
+
   if (user) {
     res.status(200).send(user)
   } else {
