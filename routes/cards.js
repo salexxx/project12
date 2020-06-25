@@ -7,12 +7,11 @@ const fs = require('fs');
 
 router.get('/', (req, res) => {
   try {
-    console.log('try');
     fs.readFile(path.resolve('./data/', 'cards.json'), { encoding: 'utf-8' }, (err, data) => {
       res.status(200).send(JSON.parse(data));
     });
   } catch (err) {
-    res.status(500).send({ "message": "something wrong with the server!" });
+    res.status(500).send({ err, "message": "something wrong with the server!" });
   }
 });
 

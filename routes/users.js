@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable quote-props */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
 const router = require('express').Router();
@@ -5,33 +7,33 @@ const path = require('path');
 const fs = require('fs');
 
 router.get('/', (req, res) => {
-  fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    res.status(200).send(JSON.parse(data));
-  });
+  try {
+    fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
+      res.status(200).send(JSON.parse(data));
+    });
+  } catch (err) {
+    res.status(500).send({ err, "message": "something wrong with the server!" });
+  }
 });
 
 router.get('/:id', (req, res) => {
-  const { id } = req.params.id;
+  const userId = req.params.id;
   let user = null;
-  fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    if (Array.isArray(JSON.parse(data))) {
+  try {
+    fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
       const arr = JSON.parse(data);
-      user = arr.find((item) => item._id === id);
-      if (user) {
-        res.status(200).send(user);
-      } else {
+      if (Array.isArray(arr)) {
+        user = arr.find((elem) => elem._id === userId);
+        if (user) {
+          res.status(200).send(user);
+        } else {
         // eslint-disable-next-line quote-props
-        res.status(404).send({ 'message': 'Нет пользователя с таким id' });
+          res.status(404).send({ 'message': 'Нет пользователя с таким id' });
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    res.status(500).send({ err, "message": "something wrong with the server!" });
+  }
 });
 module.exports = router;
