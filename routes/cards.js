@@ -6,13 +6,13 @@ const path = require('path');
 const fs = require('fs');
 
 router.get('/', (req, res) => {
-  try {
-    fs.readFile(path.resolve('./data/', 'cards.json'), { encoding: 'utf-8' }, (err, data) => {
-      res.status(200).send(JSON.parse(data));
-    });
-  } catch (err) {
-    res.status(500).send({ err, "message": "something wrong with the server!" });
-  }
+  fs.readFile(path.resolve('./data/', 'cards.json'), { encoding: 'utf-8' }, (err, data) => {
+    if (err != null) {
+      res.status(500).send({ err, "message": "something wrong with the server!" });
+      return;
+    }
+    res.status(200).send(JSON.parse(data));
+  });
 });
 
 module.exports = router;
