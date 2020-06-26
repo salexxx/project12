@@ -12,7 +12,11 @@ router.get('/', (req, res) => {
       res.status(500).send({ err, "message": "something wrong with the server!" });
       return;
     }
-    res.status(200).send(JSON.parse(data));
+    try {
+      res.status(200).send(JSON.parse(data));
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
   });
 });
 
@@ -24,15 +28,19 @@ router.get('/:id', (req, res) => {
       res.status(500).send({ err, "message": "something wrong with the server!" });
       return;
     }
-    const arr = JSON.parse(data);
-    if (Array.isArray(arr)) {
-      user = arr.find((elem) => elem._id === userId);
-      if (user) {
-        res.status(200).send(user);
-      } else {
+    try {
+      const arr = JSON.parse(data);
+      if (Array.isArray(arr)) {
+        user = arr.find((elem) => elem._id === userId);
+        if (user) {
+          res.status(200).send(user);
+        } else {
         // eslint-disable-next-line quote-props
-        res.status(404).send({ 'message': 'Нет пользователя с таким id' });
+          res.status(404).send({ 'message': 'Нет пользователя с таким id' });
+        }
       }
+    } catch (e) {
+      res.status(500).send(e.message);
     }
   });
 });

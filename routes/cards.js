@@ -11,7 +11,11 @@ router.get('/', (req, res) => {
       res.status(500).send({ err, "message": "something wrong with the server!" });
       return;
     }
-    res.status(200).send(JSON.parse(data));
+    try {
+      res.status(200).send(JSON.parse(data));
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
   });
 });
 
