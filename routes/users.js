@@ -1,26 +1,47 @@
+/* eslint-disable quotes */
+/* eslint-disable quote-props */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
 const router = require('express').Router();
-const  users  = require('../data/users.json');
+const path = require('path');
+const fs = require('fs');
 
 router.get('/', (req, res) => {
-  res.status(200).send(users);
+  fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
+    if (err != null) {
+      res.status(500).send({ err, "message": "something wrong with the server!" });
+      return;
+    }
+    try {
+      res.status(200).send(JSON.parse(data));
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
+  });
 });
 
 router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  var user = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i]._id == id) {
-      user = users[i]
-      break
+  const userId = req.params.id;
+  let user = null;
+  fs.readFile(path.resolve('./data/', 'users.json'), { enccoding: 'utf-8' }, (err, data) => {
+    if (err != null) {
+      res.status(500).send({ err, "message": "something wrong with the server!" });
+      return;
     }
-  }
-  if (user) {
-    res.status(200).send(user)
-  } else {
-    res.status(404).send({ "message": "Нет пользователя с таким id" })
-  }
+    try {
+      const arr = JSON.parse(data);
+      if (Array.isArray(arr)) {
+        user = arr.find((elem) => elem._id === userId);
+        if (user) {
+          res.status(200).send(user);
+        } else {
+        // eslint-disable-next-line quote-props
+          res.status(404).send({ 'message': 'Нет пользователя с таким id' });
+        }
+      }
+    } catch (e) {
+      res.status(500).send(e.message);
+    }
+  });
 });
-
-
-
 module.exports = router;
